@@ -48,7 +48,25 @@ func (a *Account) Deposit(amount Money) error {
 	if a.balance < amount {
 		return ErrInsufficientFunds
 	}
+	a.balance += amount
+	a.updatedAt = time.Now().UTC()
+	return nil
+}
+
+func (a *Account) Withdraw(amount Money) error {
+	if !amount.IsPositive() {
+		return ErrInvalidAmount
+	}
+	if a.balance < amount {
+		return ErrInsufficientFunds
+	}
 	a.balance -= amount
 	a.updatedAt = time.Now().UTC()
 	return nil
 }
+
+func (a *Account) ID() string           { return a.id }
+func (a *Account) OwnerName() string    { return a.ownerName }
+func (a *Account) Balance() Money       { return a.balance }
+func (a *Account) CreatedAt() time.Time { return a.createdAt }
+func (a *Account) UpdatedAt() time.Time { return a.updatedAt }
