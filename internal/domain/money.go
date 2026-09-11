@@ -15,5 +15,5 @@ func (m Money) String() string {
 		sign = "-"
 		value = -value
 	}
-	return fmt.Sprintf("%sR$ %d, %02d", sign, value/100, value%100)
+	return fmt.Sprintf("%sR$ %d,%02d", sign, value/100, value%100)
 }

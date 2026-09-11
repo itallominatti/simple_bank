@@ -45,9 +45,6 @@ func (a *Account) Deposit(amount Money) error {
 	if !amount.IsPositive() {
 		return ErrInvalidAmount
 	}
-	if a.balance < amount {
-		return ErrInsufficientFunds
-	}
 	a.balance += amount
 	a.updatedAt = time.Now().UTC()
 	return nil
