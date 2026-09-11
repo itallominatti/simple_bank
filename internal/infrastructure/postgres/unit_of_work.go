@@ -11,6 +11,10 @@ type UnitOfWork struct {
 	db *sql.DB
 }
 
+func NewUnitOfWork(db *sql.DB) *UnitOfWork {
+	return &UnitOfWork{db: db}
+}
+
 func (u *UnitOfWork) Do(ctx context.Context, fn func(repos application.Repositories) error) error {
 	tx, err := u.db.BeginTx(ctx, nil)
 	if err != nil {

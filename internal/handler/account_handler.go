@@ -78,3 +78,31 @@ func (h *AccountHandler) Withdraw(c *gin.Context) {
 
 	c.JSON(http.StatusOK, toAccountResponse(account))
 }
+
+// POST /transfers
+func (h *AccountHandler) Transfer(c *gin.Context) {
+	var req TransferRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "requisição inválida: " + err.Error()})
+		return
+	}
+
+	err := h.service.Transfer(c.Request.Context(), req.FromAccountID, req.ToAccountID, domain.Money(req.Amount))
+	if err != nil {
+		respondError(c, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "transferência realizada com sucesso"})
+}
+
+// GET /accounts/:id/transactions
+func (h *AccountHandler) ListTransactions(c *gin.Context) {
+	transactions, err := h.service.ListTransactions(c.Request.Context(), c.Param("id"))
+	if err != nil {
+		respondError(c, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, toTransactionResponses(transactions))
+}
